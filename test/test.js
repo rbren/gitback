@@ -1,10 +1,26 @@
 var Request = require('request');
 var Expect = require('chai').expect;
+var Rmdir = require('rimraf');
+var Mkdir = require('mkdirp');
+
+var TEST_REPO_DIR = '/home/ubuntu/git/petstore_test';
+
+var Git = require('simple-git')(TEST_REPO_DIR)
+  .init()
+  .add(['.'])
+  .commit("Init")
+  .checkoutLocalBranch('newbranch');
 
 describe('Server', function() {
   before(function(done) {
-    require('../server.js').listen(3333, done);
+    require('../server.js').listen(3333, TEST_REPO_DIR, done);
   });
+
+  after(function() {
+    Rmdir.sync(TEST_REPO_DIR + '/.git');
+    Rmdir.sync(TEST_REPO_DIR + '/gitback/pets');
+    Rmdir.sync(TEST_REPO_DIR + '/gitback/owners');
+  })
 
   var HOST = 'http://localhost:3333';
   var LUCY = {
@@ -44,22 +60,6 @@ describe('Server', function() {
     })
   }
 
-  it('should return Lucy', function(done) {
-    expectResponse('/pets/Lucy', LUCY, done);
-  });
-
-  it('should return bbrennan', function(done) {
-    expectResponse('/owners/bbrennan', BBRENNAN, done);
-  });
-
-  it('should return all pets', function(done) {
-    expectResponse('/pets', [LUCY], done);
-  });
-
-  it('should return all users', function(done) {
-    expectResponse('/owners', [BBRENNAN], done);
-  });
-
   it('should allow posting a pet', function(done) {
     this.timeout(5000);
     expectSuccess('post', '/pets', TACO, done);
@@ -77,4 +77,12 @@ describe('Server', function() {
   it('should return Annie', function(done) {
     expectResponse('/owners/annie', ANNIE, done);
   })
+
+  it('should return all pets', function(done) {
+    expectResponse('/pets', [TACO], done);
+  });
+
+  it('should return all users', function(done) {
+    expectResponse('/owners', [ANNIE], done);
+  });
 })

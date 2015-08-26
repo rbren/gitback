@@ -9,19 +9,21 @@ var Collection = require('./collection.js');
 
 var PORT = 3333;
 
+var Server = module.exports = {};
+
 App.use(require('body-parser').json());
 App.use(function(req, res, next) {
   res.type('json');
   next();
 });
 
-var repo = new Repo('https://github.com/bobby-brennan/gitback-petstore.git');
 var destDir = Path.join(__dirname, 'database');
 var gitbackDir = Path.join(destDir, 'gitback');
 if (FS.existsSync(destDir)) Rmdir.sync(destDir);
+FS.mkdirSync(destDir);
 
 var sync = function(callback) {
-  repo.sync(function(conflictErr) {
+  Server.repo.sync(function(conflictErr) {
     if (conflictErr) return callback(conflictErr);
     Async.parallel(Object.keys(Collections).map(function(c) {
       return function(acb) {
@@ -75,8 +77,9 @@ var addCollectionRoutes = function(name, col) {
 }
 
 var Server = module.exports = {};
-Server.listen = function(port, callback) {
-  repo.clone(destDir, function(err) {
+Server.listen = function(port, repo, callback) {
+  Server.repo = new Repo(repo);
+  Server.repo.clone(destDir, function(err) {
     var files = FS.readdirSync(gitbackDir);
     var collections = files.filter(function(name) {
       return FS.statSync(Path.join(gitbackDir, name)).isDirectory()
@@ -101,7 +104,7 @@ Server.listen = function(port, callback) {
   })
 }
 if (require.main === module) {
-  Server.listen(PORT, function() {
+  Server.listen(PORT, 'https://github.com/bobby-brennan/gitback-petstore.git', function() {
     console.log('Server ready! Listening on port ' + PORT);
   });
 }

@@ -9,6 +9,7 @@ var Collection = module.exports = function(name, dir, options) {
   self.directory = dir;
   self.options = options;
   self.items = {};
+  if (!FS.existsSync(dir)) FS.mkdirSync(dir);
   FS.readdirSync(dir).forEach(function(file) {
     var itemName = Path.basename(file, '.json');
     self.items[itemName] = JSON.parse(FS.readFileSync(Path.join(dir, file), 'utf8'));
