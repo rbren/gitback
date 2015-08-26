@@ -61,10 +61,12 @@ describe('Server', function() {
   });
 
   it('should allow posting a pet', function(done) {
+    this.timeout(5000);
     expectSuccess('post', '/pets', TACO, done);
   });
 
   it('should allow posting an owner', function(done) {
+    this.timeout(5000);
     expectSuccess('post', '/owners', ANNIE, done)
   });
 
