@@ -31,7 +31,7 @@ Collection.prototype.post = function(data) {
 }
 
 Collection.prototype.save = function(id, callback) {
-  FS.writeFile(Path.join(this.directory, id + '.json'), this.items[id], callback);
+  FS.writeFile(Path.join(this.directory, id + '.json'), JSON.stringify(this.items[id], null, 2), callback);
 }
 
 Collection.prototype.reload = function(callback) {
