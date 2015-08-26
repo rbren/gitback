@@ -64,6 +64,7 @@ var addCollectionRoutes = function(name, col) {
         Collections[name].save(id, function(err) {
           if (err) return res.json(err);
           sync(function(err) {
+            console.log('sync', Collections.pets.items);
             if (err) res.json(err);
             else res.json({success: true});
           });
