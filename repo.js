@@ -19,11 +19,14 @@ Repo.prototype.clone = function(dest, callback) {
   });
 }
 
-var resetOnErr = function(cb) {
-  this.git.fetch('origin', 'master').resetHard('origin/master', function(resetErr) {
-    if (resetErr) throw resetErr;
-    cb();
-  })
+Repo.prototype.resetOnErr = function(cb) {
+  return function(err, data) {
+    if (!err) return callback(data);
+    this.git.fetch('origin', 'master').resetHard('origin/master', function(resetErr) {
+      if (resetErr) throw resetErr;
+      cb();
+    })
+  }
 }
 
 Repo.prototype.pull = function(callback) {
