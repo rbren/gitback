@@ -16,7 +16,7 @@ App.use(function(req, res, next) {
 });
 
 var repo = new Repo('https://github.com/bobby-brennan/gitback-petstore.git');
-var destDir = Path.join(__dirname, 'repo');
+var destDir = Path.join(__dirname, 'database');
 var gitbackDir = Path.join(destDir, 'gitback');
 if (FS.existsSync(destDir)) Rmdir.sync(destDir);
 
