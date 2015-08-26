@@ -40,12 +40,9 @@ Repo.prototype.push = function(callback) {
 }
 
 Repo.prototype.sync = function(callback) {
-  console.log('sync');
   var self = this;
   self.pull(function(err) {
-    console.log('pulled', err);
     if (err) return callback(err);
-    console.log('push?')
     self.push(callback)
   })
 }

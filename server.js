@@ -22,6 +22,7 @@ if (FS.existsSync(destDir)) Rmdir.sync(destDir);
 
 var sync = function(callback) {
   repo.sync(function(conflictErr) {
+    if (conflictErr) return callback(conflictErr);
     Async.parallel(Object.keys(Collections).map(function(c) {
       return function(acb) {
         Collections[c].reload(acb);
