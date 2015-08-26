@@ -19,10 +19,10 @@ Repo.prototype.clone = function(dest, callback) {
   });
 }
 
-Repo.prototype.resetOnErr = function(cb) {
+var resetOnErr = function(repo, cb) {
   return function(err, data) {
     if (!err) return callback(data);
-    this.git.fetch('origin', 'master').resetHard('origin/master', function(resetErr) {
+    repo.git.fetch('origin', 'master').resetHard('origin/master', function(resetErr) {
       if (resetErr) throw resetErr;
       cb();
     })
@@ -30,11 +30,11 @@ Repo.prototype.resetOnErr = function(cb) {
 }
 
 Repo.prototype.pull = function(callback) {
-  this.git.add(['.']).commit("Edits").pull('origin', 'master', resetOnErr(callback));
+  this.git.add(['.']).commit("Edits").pull('origin', 'master', resetOnErr(this, callback));
 }
 
 Repo.prototype.push = function(callback) {
-  this.git.add(['.']).commit("Edits").push('origin', 'master', resetOnErr(callback));
+  this.git.add(['.']).commit("Edits").push('origin', 'master', resetOnErr(this, callback));
 }
 
 Repo.prototype.sync = function(callback) {
