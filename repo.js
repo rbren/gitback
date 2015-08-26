@@ -20,7 +20,7 @@ Repo.prototype.clone = function(dest, callback) {
 }
 
 var resetOnErr = function(cb) {
-  self.git.fetch('origin', 'master').resetHard('origin/master', function(resetErr) {
+  this.git.fetch('origin', 'master').resetHard('origin/master', function(resetErr) {
     if (resetErr) throw resetErr;
     cb();
   })
