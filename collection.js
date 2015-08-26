@@ -3,10 +3,11 @@ var Path = require('path')
 var Async = require('async');
 var _ = require('underscore');
 
-var Collection = module.exports = function(name, dir) {
+var Collection = module.exports = function(name, dir, options) {
   var self = this;
   self.name = name;
   self.directory = dir;
+  self.options = options;
   self.items = {};
   FS.readdirSync(dir).forEach(function(file) {
     var itemName = Path.basename(file, '.json');
@@ -19,8 +20,18 @@ Collection.prototype.get = function(id) {
   else return _.values(this.items);
 }
 
+Collection.prototype.post = function(data) {
+  var self = this;
+  var idField = self.options.id || 'id';
+  var id = data[idField];
+  if (!id) return {error: 'Identifier field ' + idField + ' not specified'};
+  if (self.items[id]) return {error: 'Item ' + id + ' already exists in ' + self.name};
+  self.items[id] = data;
+  return id;
+}
+
 Collection.prototype.save = function(id, callback) {
-  FS.writeFile(Path.join(this.directory, id + '.json'), items[id], callback);
+  FS.writeFile(Path.join(this.directory, id + '.json'), this.items[id], callback);
 }
 
 Collection.prototype.reload = function(callback) {

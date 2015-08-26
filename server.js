@@ -35,7 +35,7 @@ Collections = {};
 
 var addCollectionRoutes = function(name, col) {
   var colDir = Path.join(gitbackDir, name);
-  Collections[name] = new Collection(name, colDir);
+  Collections[name] = new Collection(name, colDir, col);
 
   for (key in col.access) {
     if (key.indexOf('|') === -1) continue;
@@ -58,9 +58,10 @@ var addCollectionRoutes = function(name, col) {
   var editMethods = ['post', 'put', 'patch'];
   editMethods.forEach(function(method) {
     if (col.access[method]) {
-      App.post('/' + name + '/{id}', function(req, res) {
-        Collections[name][method](req.params.id);
-        Collections[name].save(req.params.id, function(err) {
+      App[method]('/' + name, function(req, res) {
+        var id = Collections[name][method](req.body);
+        if (id.error) return res.json(id);
+        Collections[name].save(id, function(err) {
           if (err) return res.json(err);
           sync(function(err) {
             if (err) res.json(err);

@@ -27,11 +27,11 @@ var resetOnErr = function(cb) {
 }
 
 Repo.prototype.pull = function(callback) {
-  self.git.add(['.']).commit("Edits").pull('origin', 'master', resetOnErr(callback));
+  this.git.add(['.']).commit("Edits").pull('origin', 'master', resetOnErr(callback));
 }
 
 Repo.prototype.push = function(callback) {
-  self.git.add(['.']).commit("Edits").push('origin', 'master', resetOnErr(callback));
+  this.git.add(['.']).commit("Edits").push('origin', 'master', resetOnErr(callback));
 }
 
 Repo.prototype.sync = function(callback) {
