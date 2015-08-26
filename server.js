@@ -17,6 +17,7 @@ App.use(function(req, res, next) {
 
 var repo = new Repo('https://github.com/bobby-brennan/gitback-petstore.git');
 var destDir = Path.join(__dirname, 'repo');
+var gitbackDir = Path.join(destDir, 'gitback');
 if (FS.existsSync(destDir)) Rmdir.sync(destDir);
 
 var sync = function(callback) {
@@ -33,9 +34,8 @@ var sync = function(callback) {
 Collections = {};
 
 var addCollectionRoutes = function(name, col) {
-  var colDir = Path.join(destDir, name);
-
-  Collections[name] = new Collection(name, Path.join(destDir, name));
+  var colDir = Path.join(gitbackDir, name);
+  Collections[name] = new Collection(name, colDir);
 
   for (key in col.access) {
     if (key.indexOf('|') === -1) continue;
@@ -75,18 +75,18 @@ var addCollectionRoutes = function(name, col) {
 var Server = module.exports = {};
 Server.listen = function(port, callback) {
   repo.clone(destDir, function(err) {
-    var files = FS.readdirSync(destDir);
+    var files = FS.readdirSync(gitbackDir);
     var collections = files.filter(function(name) {
-      return FS.statSync(Path.join(destDir, name)).isDirectory()
+      return FS.statSync(Path.join(gitbackDir, name)).isDirectory()
     });
-    var api = FS.readFileSync(Path.join(destDir, 'api.js'), 'utf8');
+    var api = FS.readFileSync(Path.join(gitbackDir, 'api.js'), 'utf8');
     eval('api = ' + api);
     var controllers = files.filter(function(file) {
       return file !== 'api.js' && Path.extname(file) === '.js'
     });
     api.collections = api.collections || {};
     controllers.forEach(function(controller) {
-      var js = FS.readFileSync(Path.join(destDir, controller), 'utf8');
+      var js = FS.readFileSync(Path.join(gitbackDir, controller), 'utf8');
       eval('api.collections.' + Path.basename(controller, '.js') + ' = ' + js);
     });
 
