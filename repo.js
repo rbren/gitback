@@ -36,7 +36,9 @@ Repo.prototype.pull = function(callback) {
 
 Repo.prototype.push = function(callback) {
   console.log('push!')
-  this.git.add(['.']).commit("Edits").push('origin', 'master', resetOnErr(this, callback));
+  this.git.add(['.'], resetOnErr(this, callback))
+    .commit("Edits", resetOnErr(this, callback))
+    .push('origin', 'master', resetOnErr(this, callback));
 }
 
 Repo.prototype.sync = function(callback) {
