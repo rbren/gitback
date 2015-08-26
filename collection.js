@@ -43,7 +43,8 @@ Collection.prototype.reload = function(callback) {
       return function(acb) {
         FS.readFile(Path.join(self.directory, file), 'utf8', function(err, data) {
           if (err) return acb(err);
-          self.items[file] = JSON.parse(data);
+          var itemName = Path.basename(file, '.json');
+          self.items[itemName] = JSON.parse(data);
           acb();
         });
       }
