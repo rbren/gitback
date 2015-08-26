@@ -21,10 +21,10 @@ Repo.prototype.clone = function(dest, callback) {
 
 var resetOnErr = function(repo, cb) {
   return function(err, data) {
-    if (!err) return callback(data);
+    if (!err) return cb(data);
     repo.git.fetch('origin', 'master').resetHard('origin/master', function(resetErr) {
       if (resetErr) throw resetErr;
-      cb();
+      cb(err)
     })
   }
 }
