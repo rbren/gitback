@@ -1,0 +1,31 @@
+{
+  "name": "gitback",
+  "version": "0.0.1",
+  "description": "An API that uses git as a backend",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobby-brennan/gitback.git"
+  },
+  "author": "Bobby Brennan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bobby-brennan/gitback/issues"
+  },
+  "homepage": "https://github.com/bobby-brennan/gitback#readme",
+  "dependencies": {
+    "async": "^1.4.2",
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "request": "^2.61.0",
+    "rimraf": "^2.4.2",
+    "simple-git": "^1.8.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0"
+  }
+}
