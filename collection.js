@@ -41,7 +41,10 @@ Collection.prototype.reload = function(callback) {
     if (err) return callback (err);
     Async.parallel(files.map(function(file) {
       return function(acb) {
-        FS.readFile(Path.join(self.directory, file), 'utf8', acb);
+        FS.readFile(Path.join(self.directory, file), 'utf8', function(err, data) {
+          if (err) return acb(err);
+          self.items[file] = JSON.parse(data);
+        });
       }
     }), callback);
   })
