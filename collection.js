@@ -44,6 +44,7 @@ Collection.prototype.reload = function(callback) {
         FS.readFile(Path.join(self.directory, file), 'utf8', function(err, data) {
           if (err) return acb(err);
           self.items[file] = JSON.parse(data);
+          acb();
         });
       }
     }), callback);
