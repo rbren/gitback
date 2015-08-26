@@ -37,7 +37,7 @@ Collection.prototype.save = function(id, callback) {
 Collection.prototype.reload = function(callback) {
   var self = this;
   self.items = {};
-  FS.readDir(this.directory, function(err, files) {
+  FS.readdir(this.directory, function(err, files) {
     if (err) return callback (err);
     Async.parallel(files.map(function(file) {
       return function(acb) {
