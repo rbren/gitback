@@ -58,6 +58,10 @@ describe('Server', function() {
     "id": "annie",
     "name": "Annie",
   }
+  var TACO_FULL = JSON.parse(JSON.stringify(TACO));
+  var ANNIE_FULL = JSON.parse(JSON.stringify(ANNIE));
+  ANNIE_FULL.pets = [TACO];
+  TACO_FULL.owners = [ANNIE];
 
   var expectResponse = function(path, expected, done) {
     Request(HOST + path, {json: true}, function(err, resp, body) {
@@ -86,18 +90,18 @@ describe('Server', function() {
   });
 
   it('should return Taco', function(done) {
-    expectResponse('/pets/Taco', TACO, done);
+    expectResponse('/pets/Taco', TACO_FULL, done);
   })
 
   it('should return Annie', function(done) {
-    expectResponse('/owners/annie', ANNIE, done);
+    expectResponse('/owners/annie', ANNIE_FULL, done);
   })
 
   it('should return all pets', function(done) {
-    expectResponse('/pets', [TACO], done);
+    expectResponse('/pets', [TACO_FULL], done);
   });
 
   it('should return all users', function(done) {
-    expectResponse('/owners', [ANNIE], done);
+    expectResponse('/owners', [ANNIE_FULL], done);
   });
 })
