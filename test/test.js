@@ -1,3 +1,5 @@
+var Path = require('path');
+var FS = require('fs');
 var Request = require('request');
 var Expect = require('chai').expect;
 var Rmdir = require('rimraf');
@@ -8,25 +10,30 @@ var Gitback = require('../index.js');
 var TEST_REPO_DIR = '/home/ubuntu/git/petstore_test';
 
 var Git = require('simple-git')(TEST_REPO_DIR)
-  .init()
-  .add(['.'])
-  .commit("Init")
-  .checkoutLocalBranch('newbranch');
+var TEST_BRANCH = 'testbranch';
+var REST_BRANCH = 'master';
+var PET_DIR = Path.join(TEST_REPO_DIR, 'gitback/pets');
+var OWNER_DIR = Path.join(TEST_REPO_DIR, 'gitback/owners');
 
 describe('Server', function() {
   var gitback = null;
   before(function(done) {
-    gitback = new Gitback({remote: TEST_REPO_DIR, directory: __dirname + '/test_database'});
-    gitback.initialize(function() {
-      gitback.listen(3333);
-      done();
+    Git.checkout(TEST_BRANCH, function(err) {
+      if (err) throw err;
+      if (FS.existsSync(PET_DIR)) Rmdir.sync(PET_DIR);
+      if (FS.existsSync(OWNER_DIR)) Rmdir.sync(OWNER_DIR);
+      Git.commit('remove items', ['.']).checkout(REST_BRANCH, function(err) {
+        if (err) throw err;
+        gitback = new Gitback({remote: TEST_REPO_DIR, branch: TEST_BRANCH, directory: __dirname + '/test_database'});
+        gitback.initialize(function() {
+          gitback.listen(3333);
+          done();
+        });
+      })
     });
   });
 
   after(function() {
-    Rmdir.sync(TEST_REPO_DIR + '/.git');
-    Rmdir.sync(TEST_REPO_DIR + '/gitback/pets');
-    Rmdir.sync(TEST_REPO_DIR + '/gitback/owners');
     Rmdir.sync(__dirname + '/test_database');
   })
 
