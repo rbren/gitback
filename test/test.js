@@ -68,7 +68,6 @@ describe('Server', function() {
   var ANNIE_FULL = JSON.parse(JSON.stringify(ANNIE));
   ANNIE_FULL.pets = [TACO];
   TACO_FULL.owners = [{id: ANNIE.id, name: ANNIE.name}];
-  delete ANNIE_FULL.password;
 
   var expectResponse = function(path, expected, done) {
     Request(HOST + path, {json: true}, function(err, resp, body) {
