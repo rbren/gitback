@@ -7,7 +7,7 @@ var Mkdir = require('mkdirp');
 
 var Gitback = require('../index.js');
 
-var TEST_REPO_DIR = '/home/ubuntu/git/petstore_test';
+var TEST_REPO_DIR = '/home/ubuntu/git/gitback-petstore';
 
 var Git = require('simple-git')(TEST_REPO_DIR)
 var TEST_BRANCH = 'testbranch';
@@ -57,11 +57,13 @@ describe('Server', function() {
   var ANNIE = {
     "id": "annie",
     "name": "Annie",
+    "password": "foobar",
   }
   var TACO_FULL = JSON.parse(JSON.stringify(TACO));
   var ANNIE_FULL = JSON.parse(JSON.stringify(ANNIE));
   ANNIE_FULL.pets = [TACO];
   TACO_FULL.owners = [ANNIE];
+  delete ANNIE_FULL.password;
 
   var expectResponse = function(path, expected, done) {
     Request(HOST + path, {json: true}, function(err, resp, body) {
