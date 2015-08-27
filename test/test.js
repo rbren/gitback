@@ -3,6 +3,8 @@ var Expect = require('chai').expect;
 var Rmdir = require('rimraf');
 var Mkdir = require('mkdirp');
 
+var Gitback = require('../index.js');
+
 var TEST_REPO_DIR = '/home/ubuntu/git/petstore_test';
 
 var Git = require('simple-git')(TEST_REPO_DIR)
@@ -12,14 +14,20 @@ var Git = require('simple-git')(TEST_REPO_DIR)
   .checkoutLocalBranch('newbranch');
 
 describe('Server', function() {
+  var gitback = null;
   before(function(done) {
-    require('../server.js').listen(3333, TEST_REPO_DIR, done);
+    gitback = new Gitback({remote: TEST_REPO_DIR, directory: __dirname + '/test_database'});
+    gitback.initialize(function() {
+      gitback.listen(3333);
+      done();
+    });
   });
 
   after(function() {
     Rmdir.sync(TEST_REPO_DIR + '/.git');
     Rmdir.sync(TEST_REPO_DIR + '/gitback/pets');
     Rmdir.sync(TEST_REPO_DIR + '/gitback/owners');
+    Rmdir.sync(__dirname + '/test_database');
   })
 
   var HOST = 'http://localhost:3333';
