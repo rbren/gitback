@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var Path = require('path');
 var FS = require('fs');
 var Request = require('request');
@@ -16,6 +17,7 @@ var PET_DIR = Path.join(TEST_REPO_DIR, 'gitback/pets');
 var OWNER_DIR = Path.join(TEST_REPO_DIR, 'gitback/owners');
 
 describe('Server', function() {
+  this.timeout(3500);
   var gitback = null;
   before(function(done) {
     Git.checkout(TEST_BRANCH, function(err) {
@@ -50,14 +52,17 @@ describe('Server', function() {
     "age": 1,
     "type": "cat",
   }
-  var BBRENNAN = {
+  var BOBBY = {
     "id": "bbrennan",
     "name": "Bobby",
+  }
+  var ANDREW = {
+    id: 'abj',
+    name: 'Andrew',
   }
   var ANNIE = {
     "id": "annie",
     "name": "Annie",
-    "password": "foobar",
   }
   var TACO_FULL = JSON.parse(JSON.stringify(TACO));
   var ANNIE_FULL = JSON.parse(JSON.stringify(ANNIE));
@@ -73,22 +78,46 @@ describe('Server', function() {
     });
   }
 
-  var expectSuccess = function(method, path, data, done) {
-    Request(HOST + path, {method: method, json: true, body: data}, function(err, resp, body) {
-      Expect(err).to.equal(null);
-      Expect(body).to.deep.equal({success: true});
-      done();
-    })
+  var expectBody = function(fn) {
+    return function(method, path, data, done) {
+      Request(HOST + path, {method: method, json: true, body: data}, function(err, resp, body) {
+        Expect(err).to.equal(null);
+        fn(body);
+        done();
+      })
+    }
   }
 
+  var expectSuccess = expectBody(function(body) {
+    Expect(body).to.deep.equal({success: true});
+  });
+
+  var expectFailure = expectBody(function(body) {
+    Expect(body.error).to.be.a('string');
+  })
+
+  it('should not allow posting a bad schema', function(done) {
+    expectFailure('post', '/pets', _.extend({}, TACO, {age: '7'}), done);
+  });
+
+  it('should not allow posting extra fields', function(done) {
+    expectFailure('post', '/pets', _.extend({foo: 'bar'}, TACO), done);
+  })
+
+  it('should not have any pets', function(done) {
+    expectResponse('/pets', [], done);
+  })
+
   it('should allow posting a pet', function(done) {
-    this.timeout(5000);
     expectSuccess('post', '/pets', TACO, done);
   });
 
+  it('should not allow posting an owner without password', function(done) {
+    expectFailure('post', '/owners', ANNIE, done);
+  })
+
   it('should allow posting an owner', function(done) {
-    this.timeout(5000);
-    expectSuccess('post', '/owners', ANNIE, done)
+    expectSuccess('post', '/owners', _.extend({password: 'foobar'}, ANNIE), done)
   });
 
   it('should return Taco', function(done) {
