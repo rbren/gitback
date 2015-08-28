@@ -8,9 +8,9 @@ var Mkdir = require('mkdirp');
 
 var Gitback = require('../index.js');
 
-var TEST_REPO_DIR = '/home/ubuntu/git/gitback-petstore';
+var TEST_REPO_DIR = __dirname + '/petstore';
 
-var Git = require('simple-git')(TEST_REPO_DIR)
+var Git = require('simple-git')(TEST_REPO_DIR);
 var TEST_BRANCH = 'testbranch';
 var REST_BRANCH = 'master';
 var PET_DIR = Path.join(TEST_REPO_DIR, 'pets');
