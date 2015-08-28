@@ -73,28 +73,33 @@ describe('Server', function() {
   ANNIE_FULL.pets = [TACO];
   TACO_FULL.owners = [{id: ANNIE.id, name: ANNIE.name}];
 
-  var expectResponse = function(path, expected, done) {
-    Request(HOST + path, {json: true}, function(err, resp, body) {
-      Expect(err).to.equal(null);
-      Expect(body).to.deep.equal(expected);
-      done();
-    });
-  }
-
-  var expectBody = function(fn) {
+  var expectBody = function(bodyfn) {
     return function(method, path, data, user, done) {
       if (!done) {
         done = user;
         user = null;
       }
-      var headers = {};
-      if (user) headers.Authorization = 'Basic ' + user.id + ':' + user.password;
-      Request(HOST + path, {method: method, json: true, body: data, headers: headers}, function(err, resp, body) {
+      var req = {method: method, json: true, headers: {}};
+      if (user) req.headers.Authorization = 'Basic ' + user.id + ':' + user.password;
+      if (data && method === 'get') req.qs = data;
+      else if (data) req.body = data;
+      Request(HOST + path, req, function(err, resp, body) {
         Expect(err).to.equal(null);
-        fn(body);
+        if (bodyfn) bodyfn(body);
         done();
       })
     }
+  }
+
+  var expectNotFound = expectBody(null, function(err) {
+    Expect(body).to.be.a('string');
+    Expect(body.substring(0, 6)).to.equal('Cannot');
+  })
+
+  var expectResponse = function(path, expected, done) {
+    expectBody(function(body) {
+      Expect(body).to.deep.equal(expected);
+    })('get', path, null, null, done);
   }
 
   var expectSuccess = expectBody(function(body) {
@@ -163,5 +168,9 @@ describe('Server', function() {
 
   it('should reflect edit', function(done) {
     expectResponse('/pets/' + TACO.name, _.extend({type: 'dog'}, TACO_FULL), done);
-  })
+  });
+
+  it('should not allow delete, even by owner', function(done) {
+    expectNotFound('delete', '/pets/' + TACO.name, null, ANNIE, done);
+  });
 })
