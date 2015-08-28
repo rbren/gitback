@@ -13,8 +13,8 @@ var TEST_REPO_DIR = '/home/ubuntu/git/gitback-petstore';
 var Git = require('simple-git')(TEST_REPO_DIR)
 var TEST_BRANCH = 'testbranch';
 var REST_BRANCH = 'master';
-var PET_DIR = Path.join(TEST_REPO_DIR, 'gitback/pets');
-var OWNER_DIR = Path.join(TEST_REPO_DIR, 'gitback/owners');
+var PET_DIR = Path.join(TEST_REPO_DIR, 'pets');
+var OWNER_DIR = Path.join(TEST_REPO_DIR, 'owners');
 
 describe('Server', function() {
   this.timeout(3500);
