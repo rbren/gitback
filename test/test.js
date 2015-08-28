@@ -53,19 +53,23 @@ describe('Server', function() {
     "type": "cat",
   }
   var BOBBY = {
-    "id": "bbrennan",
-    "name": "Bobby",
+    id: "bbrennan",
+    name: "Bobby",
+    password: 'bbpass',
   }
   var ANDREW = {
     id: 'abj',
     name: 'Andrew',
+    password: 'aapass',
   }
   var ANNIE = {
-    "id": "annie",
-    "name": "Annie",
+    id: "annie",
+    name: "Annie",
+    password: 'annepass',
   }
   var TACO_FULL = JSON.parse(JSON.stringify(TACO));
   var ANNIE_FULL = JSON.parse(JSON.stringify(ANNIE));
+  delete ANNIE_FULL.password;
   ANNIE_FULL.pets = [TACO];
   TACO_FULL.owners = [{id: ANNIE.id, name: ANNIE.name}];
 
@@ -78,8 +82,14 @@ describe('Server', function() {
   }
 
   var expectBody = function(fn) {
-    return function(method, path, data, done) {
-      Request(HOST + path, {method: method, json: true, body: data}, function(err, resp, body) {
+    return function(method, path, data, user, done) {
+      if (!done) {
+        done = user;
+        user = null;
+      }
+      var headers = {};
+      if (user) headers.Authorization = 'Basic ' + user.id + ':' + user.password;
+      Request(HOST + path, {method: method, json: true, body: data, headers: headers}, function(err, resp, body) {
         Expect(err).to.equal(null);
         fn(body);
         done();
@@ -112,11 +122,11 @@ describe('Server', function() {
   });
 
   it('should not allow posting an owner without password', function(done) {
-    expectFailure('post', '/owners', ANNIE, done);
+    expectFailure('post', '/owners', {id: ANNIE.id, name: ANNIE.name}, done);
   })
 
   it('should allow posting an owner', function(done) {
-    expectSuccess('post', '/owners', _.extend({password: 'foobar'}, ANNIE), done)
+    expectSuccess('post', '/owners', ANNIE, done)
   });
 
   it('should return Taco', function(done) {
@@ -134,4 +144,24 @@ describe('Server', function() {
   it('should return all users', function(done) {
     expectResponse('/owners', [ANNIE_FULL], done);
   });
+
+  it('should allow adding second user', function(done) {
+    expectSuccess('post', '/owners', BOBBY, done);
+  })
+
+  it('should not allow pet edit without auth', function(done) {
+    expectFailure('patch', '/pets', _.extend({type: 'dog'}, TACO), done);
+  });
+
+  it('should not allow pet edit by wrong user', function(done) {
+    expectFailure('patch', '/pets', _.extend({type: 'dog'}, TACO), BOBBY, done);
+  })
+
+  it('should allow pet edit with auth', function(done) {
+    expectSuccess('patch', '/pets', _.extend({type: 'dog'}, TACO), ANNIE, done)
+  });
+
+  it('should reflect edit', function(done) {
+    expectResponse('/pets/' + TACO.name, _.extend({type: 'dog'}, TACO_FULL), done);
+  })
 })
