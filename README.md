@@ -48,10 +48,6 @@ MongoDB instance.
 As an example, I'm maintaining my blog using GitBack. You can
 [see the repository here](https://github.com/bobby-brennan/gitback-blog)
 
-If I'm ever handling dozens of comments per second, or become so prolific that I have
-thousands of articles to serve, I'll have to consider migrating to MongoDB. But for now,
-GitBack is far and away the easiest way for me to create and maintain articles and comments.
-
 ## Usage
 
 ### Quickstart
