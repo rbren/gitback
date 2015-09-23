@@ -10,13 +10,9 @@ npm install --save gitback
 
 GitBack is a (currently experimental) attempt to use Git as a datastore for NodeJS. 
 Data is stored as files (generally JSON documents) inside a Git repository, and is exposed
-via a RESTful API. This may seem insane, and it many ways it is:
-* Each write will cause two separate disk writes (one locally, one in the remote)
-* Concurrent writes to the same document will frequently fail
-* We need to make frequent calls to ```git pull``` to keep the local repository in line with the remote
-* These issues compound when using multiple replicas (e.g. for loadbalancing)
+via a RESTful API. This may seem insane, and it many ways it is. But there are a number of positives.
 
-However, despite these drawbacks, there are a number of positives. We get, for free:
+We get, for free:
 * A **history of every revision** to the datastore
 * Easy **versioning** via branches
 * The ability to **roll back** any single change, or **revert** to any point in time
@@ -25,6 +21,12 @@ However, despite these drawbacks, there are a number of positives. We get, for f
 
 That last point is particularly important if you want to collaborate with less-technical folks.
 What would normally involve database queries can now be done in a point-and-click interface.
+
+### Objections
+* Each write will cause two separate disk writes (one locally, one in the remote)
+* Concurrent writes to the same document will frequently fail
+* We need to make frequent calls to ```git pull``` to keep the local repository in line with the remote
+* These issues compound when using multiple replicas (e.g. for loadbalancing)
 
 So when should you use GitBack, and when should you use a more traditional datastore?
 
@@ -68,7 +70,8 @@ var App = require('express')();
 var GitBack = require('gitback');
 var DB = new GitBack({
   directory: __dirname + '/database',
-  remote: "https://username:password@github.com/username/repository.git"
+  remote: "https://username:password@github.com/username/repository.git",
+  refreshRate: 30000, // Check remote for changes every 30s
 });
 DB.initialize(function(err) {
   App.use('/api', DB.router);
