@@ -17,11 +17,11 @@ via a RESTful API. This may seem insane, and it many ways it is:
 * These issues compound when using multiple replicas (e.g. for loadbalancing)
 
 However, despite these drawbacks, there are a number of positives. We get, for free:
-* A history of every revision to the datastore
-* Easy versioning via branches
-* The ability to roll back any single change, or revert to any point in time
-* The ability to store aribitrary data **without dealing with encoding/decoding**. Images are just images, .zips are just .zips
-* A beautiful GUI for viewing and editing the datastore, thanks to GitHub
+* A **history of every revision** to the datastore
+* Easy **versioning** via branches
+* The ability to **roll back** any single change, or **revert** to any point in time
+* The ability to store **aribitrary data** without dealing with encoding/decoding. Images are just images, .zips are just .zips
+* A **beautiful GUI** for viewing and editing the datastore, thanks to GitHub
 
 That last point is particularly important if you want to collaborate with less-technical folks.
 What would normally involve database queries can now be done in a point-and-click interface.
