@@ -13,7 +13,7 @@ All our data is stored as files (generally JSON documents) inside a Git reposito
 via a RESTful API. This may seem insane, and it many ways it is:
 * Each write will cause two separate disk writes (one locally, one in the remote)
 * Concurrent writes to the same document will frequently fail
-* We need to make frequent calls to ```git pull`` to keep the local repository in line with the remote
+* We need to make frequent calls to ```git pull``` to keep the local repository in line with the remote
 * These issues compound when using multiple replicas (e.g. for loadbalancing)
 
 However, despite these drawbacks, there are a number of positives. We get, for free:
@@ -63,7 +63,7 @@ Easy but not very secure. [Instructions](http://git-scm.com/docs/git-credential-
 ```js
 var GitBack = require('gitback');
 var DB = new GitBack({
-  directory: __dirname + '/../database',
+  directory: __dirname + '/database',
   remote: 'https://github.com/username/repository.git',
 });
 ```
