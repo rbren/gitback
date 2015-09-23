@@ -27,7 +27,12 @@ describe('Server', function() {
       if (FS.existsSync(OWNER_DIR)) Rmdir.sync(OWNER_DIR);
       Git.commit('remove items', ['.']).checkout(REST_BRANCH, function(err) {
         if (err) throw err;
-        gitback = new Gitback({remote: TEST_REPO_DIR, branch: TEST_BRANCH, directory: DEST_REPO_DIR});
+        gitback = new Gitback({
+          remote: TEST_REPO_DIR,
+          branch: TEST_BRANCH,
+          directory: DEST_REPO_DIR,
+          baseURL: 'http://localhost:3333'
+        });
         gitback.initialize(function() {
           gitback.listen(3333);
           done();
@@ -167,11 +172,25 @@ describe('Server', function() {
 
   it('should not allow pet edit by wrong user', function(done) {
     expectFailure('patch', '/pets', _.extend({type: 'dog'}, TACO), BOBBY, done);
-  })
+  });
 
   it('should allow pet edit with auth', function(done) {
     expectSuccess('patch', '/pets', _.extend({type: 'dog'}, TACO), ANNIE, done)
   });
+
+  it('should allow getting a picture attachment', function(done) {
+    var pic = FS.readFileSync(__dirname + '/data/taco.txt', 'utf8');
+    FS.writeFileSync(DEST_REPO_DIR + '/pets/Taco/photo.txt', pic);
+    gitback.collections.pets.reload(function(err) {
+      Expect(err).to.equal(null);
+      expectResponse('/pets/Taco/photo', pic, done);
+    });
+  });
+
+  it('should show link to picture attachment', function(done) {
+    TACO_FULL.photo = 'http://localhost:3333/pets/Taco/photo',
+    expectResponse('/pets/Taco', TACO_FULL, done);
+  })
 
   it('should reflect edit', function(done) {
     expectResponse('/pets/' + TACO.name, _.extend({type: 'dog'}, TACO_FULL), done);
