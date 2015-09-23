@@ -54,11 +54,45 @@ GitBack is far and away the easiest way for me to create and maintain articles a
 
 ## Usage
 
+### Quickstart
+* [Create a new repository](https://github.com/new)
+* Add a collection to that repository:
+**./myCollection.js**
+```js
+{
+  access: {
+    get: 'all',
+    post: 'all',
+  }
+}
+```
+* Create a GitBack server with Express, passing in the URL of the repository you created.
+```js
+var App = require('express')();
+var GitBack = require('gitback');
+var DB = new GitBack({
+  directory: __dirname + '/database',
+  remote: "https://username:password@github.com/username/repository.git"
+});
+DB.initialize(function(err) {
+  App.use('/api', DB.router);
+});
+App.listen(3000);
+```
+* Use it!
+```bash
+$ curl localhost:3000/api/myCollection -X POST -H "Content-Type: application/json" -d '{"id": "foo", "bar": "baz"}'
+{"success": true}
+$ curl localhost:3000/api/myCollection
+[{"id": "foo", "bar": "baz"}]
+```
+
+You'll see the changes immediately reflected in the repository you created in step 1.
+
 ### Authorization
 
-First you'll need to create a new repository for GitBack to store data in. Then you'll need
-to make sure your machine has read and write access to the repository. There are a few strategies
-for this:
+You'll need to make sure your machine has read and write access to the repository.
+There are a few strategies for this:
 
 #### Use your Username and Password
 The best way to do this is to use an environment variable:
