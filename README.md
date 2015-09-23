@@ -70,7 +70,8 @@ var App = require('express')();
 var GitBack = require('gitback');
 var DB = new GitBack({
   directory: __dirname + '/database',
-  remote: "https://username:password@github.com/username/repository.git"
+  remote: "https://username:password@github.com/username/repository.git",
+  refreshRate: 30000, // Check remote for changes every 30s
 });
 DB.initialize(function(err) {
   App.use('/api', DB.router);
