@@ -9,7 +9,7 @@ npm install --save gitback
 ## About
 
 GitBack is a (currently experimental) attempt to use Git as a datastore for NodeJS. 
-All our data is stored as files (generally JSON documents) inside a Git repository, and is exposed
+Data is stored as files (generally JSON documents) inside a Git repository, and is exposed
 via a RESTful API. This may seem insane, and it many ways it is:
 * Each write will cause two separate disk writes (one locally, one in the remote)
 * Concurrent writes to the same document will frequently fail
