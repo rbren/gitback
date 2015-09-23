@@ -41,7 +41,7 @@ DON'T use GitBack if:
 * You need to store gigabytes of data
 * You can't deal with slow writes (> 1s)
  
-GitBack is great for small projects, or for getting an idea off the ground quicky
+GitBack is great for small projects, or for getting an idea off the ground quickly.
 It doesn't scale well at all, but we're working on ways to export to and sync with a
 MongoDB instance.
 
