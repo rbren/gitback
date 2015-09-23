@@ -9,6 +9,7 @@ var Mkdir = require('mkdirp');
 var Gitback = require('../index.js');
 
 var TEST_REPO_DIR = __dirname + '/petstore';
+var DEST_REPO_DIR = __dirname + '/test_database';
 
 var Git = require('simple-git')(TEST_REPO_DIR);
 var TEST_BRANCH = 'testbranch';
@@ -26,7 +27,7 @@ describe('Server', function() {
       if (FS.existsSync(OWNER_DIR)) Rmdir.sync(OWNER_DIR);
       Git.commit('remove items', ['.']).checkout(REST_BRANCH, function(err) {
         if (err) throw err;
-        gitback = new Gitback({remote: TEST_REPO_DIR, branch: TEST_BRANCH, directory: __dirname + '/test_database'});
+        gitback = new Gitback({remote: TEST_REPO_DIR, branch: TEST_BRANCH, directory: DEST_REPO_DIR});
         gitback.initialize(function() {
           gitback.listen(3333);
           done();
@@ -51,6 +52,7 @@ describe('Server', function() {
     "owners": ["annie"],
     "age": 1,
     "type": "cat",
+    "description": "He's *hairy*",
   }
   var BOBBY = {
     id: "bbrennan",
@@ -137,6 +139,11 @@ describe('Server', function() {
   it('should return Taco', function(done) {
     expectResponse('/pets/Taco', TACO_FULL, done);
   })
+
+  it('should have Taco description in attachment', function() {
+    var contents = FS.readFileSync(DEST_REPO_DIR + '/pets/Taco/description.md', 'utf8');
+    Expect(contents).to.equal(TACO.description);
+  });
 
   it('should return Annie', function(done) {
     expectResponse('/owners/annie', ANNIE_FULL, done);
