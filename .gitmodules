@@ -1,0 +1,3 @@
+[submodule "test/petstore"]
+	path = test/petstore
+	url = https://github.com/bobby-brennan/gitback-test-petstore.git
