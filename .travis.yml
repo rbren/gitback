@@ -3,3 +3,4 @@ node_js:
   - "stable"
 before_script:
   - git config --global user.email travis@lucybot.com
+  - git config --global user.name "Travis" 
