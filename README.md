@@ -138,7 +138,7 @@ var DB = new GitBack({
 });
 ```
 
-### Creating the Datastore
+## The Datastore
 
 For each collection in the datastore, we'll have:
 * ```./{collection}.js``` - a file that describes the collection, e.g. it's schema and access control
