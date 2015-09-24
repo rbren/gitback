@@ -65,6 +65,11 @@ As an example, I'm maintaining my blog using GitBack. You can
 }
 ```
 * Create a GitBack server with Express, passing in the URL of the repository you created.
+```bash
+$ npm install express gitback
+```
+
+**./server.js**
 ```js
 var App = require('express')();
 var GitBack = require('gitback');
@@ -80,6 +85,7 @@ App.listen(3000);
 ```
 * Use it!
 ```bash
+$ node server.js &
 $ curl localhost:3000/api/myCollection -X POST -H "Content-Type: application/json" -d '{"id": "foo", "bar": "baz"}'
 {"success": true}
 $ curl localhost:3000/api/myCollection
