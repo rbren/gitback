@@ -1,6 +1,7 @@
 # GitBack
 
 [![Build Status](https://travis-ci.org/bobby-brennan/gitback.svg?branch=master)](https://travis-ci.org/bobby-brennan/gitback)
+[![npm version](https://badge.fury.io/js/gitback.svg)](http://badge.fury.io/js/gitback)
 
 ## Installation
 
