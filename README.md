@@ -113,6 +113,8 @@ var DB = new GitBack({
 ```
 
 #### Store your Git credentials
+Git provies a way for you to permanently stash your credentials on the current machine
+
 [Instructions](http://git-scm.com/docs/git-credential-store)
 ```js
 var GitBack = require('gitback');
