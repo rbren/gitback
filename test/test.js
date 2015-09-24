@@ -8,14 +8,14 @@ var Mkdir = require('mkdirp');
 
 var Gitback = require('../index.js');
 
-var TEST_REPO_DIR = __dirname + '/petstore';
+var REMOTE_DIR = __dirname + '/petstore';
 var DEST_REPO_DIR = __dirname + '/test_database';
 
-var Git = require('simple-git')(TEST_REPO_DIR);
+var Git = require('simple-git')(REMOTE_DIR);
 var TEST_BRANCH = 'testbranch';
 var REST_BRANCH = 'master';
-var PET_DIR = Path.join(TEST_REPO_DIR, 'pets');
-var OWNER_DIR = Path.join(TEST_REPO_DIR, 'owners');
+var PET_DIR = Path.join(REMOTE_DIR, 'pets');
+var OWNER_DIR = Path.join(REMOTE_DIR, 'owners');
 
 describe('Server', function() {
   this.timeout(3500);
@@ -28,7 +28,7 @@ describe('Server', function() {
       Git.commit('remove items', ['.']).checkout(REST_BRANCH, function(err) {
         if (err) throw err;
         gitback = new Gitback({
-          remote: TEST_REPO_DIR,
+          remote: REMOTE_DIR,
           branch: TEST_BRANCH,
           directory: DEST_REPO_DIR,
           baseURL: 'http://localhost:3333'
