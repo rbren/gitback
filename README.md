@@ -1,5 +1,10 @@
 # GitBack
-[![Build Status](https://travis-ci.org/bobby-brennan/gitback.svg?branch=master)](https://travis-ci.org/bobby-brennan/gitback)
+[![Build status][travis-image]][travis-link]
+[![NPM version][npm-image]][npm-link]
+[![Code climate][climate-image]][climate-link]
+[![Dependency status][deps-image]][deps-link]
+[![devDependency status][devdeps-image]][devdeps-link]
+
 ## Installation
 
 ```bash
