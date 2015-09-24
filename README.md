@@ -86,7 +86,7 @@ App.listen(3000);
 * Use it!
 ```bash
 $ node server.js &
-$ curl localhost:3000/api/myCollection -X POST -H "Content-Type: application/json" -d '{"id": "foo", "bar": "baz"}'
+$ curl -X POST localhost:3000/api/myCollection -d '{"id": "foo", "bar": "baz"}' -H "Content-Type: application/json" 
 {"success": true}
 $ curl localhost:3000/api/myCollection
 [{"id": "foo", "bar": "baz"}]
