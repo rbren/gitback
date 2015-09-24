@@ -203,5 +203,8 @@ There's a lot going on here. Let's take it field by field.
   * put: overwrites an object
   * patch: edits an object
   * delete: deletes an object
+  
+## Contributing
+Contributions, issues, and pull requests are welcome!
 
   
