@@ -1,5 +1,8 @@
 # GitBack
 
+[![Build Status](https://travis-ci.org/bobby-brennan/gitback.svg?branch=master)](https://travis-ci.org/bobby-brennan/gitback)
+[![npm version](https://badge.fury.io/js/gitback.svg)](http://badge.fury.io/js/gitback)
+
 ## Installation
 
 ```bash
@@ -113,6 +116,8 @@ var DB = new GitBack({
 ```
 
 #### Store your Git credentials
+Git provies a way for you to permanently stash your credentials on the current machine
+
 [Instructions](http://git-scm.com/docs/git-credential-store)
 ```js
 var GitBack = require('gitback');
@@ -136,7 +141,7 @@ var DB = new GitBack({
 });
 ```
 
-### Creating the Datastore
+## The Datastore
 
 For each collection in the datastore, we'll have:
 * ```./{collection}.js``` - a file that describes the collection, e.g. it's schema and access control
@@ -201,5 +206,8 @@ There's a lot going on here. Let's take it field by field.
   * put: overwrites an object
   * patch: edits an object
   * delete: deletes an object
+  
+## Contributing
+Contributions, issues, and pull requests are welcome!
 
   
