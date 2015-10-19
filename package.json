@@ -1,6 +1,6 @@
 {
   "name": "gitback",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "An API that uses git as a backend",
   "main": "server.js",
   "scripts": {
